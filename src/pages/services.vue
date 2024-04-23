@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, Ref } from 'vue';
+import { ref, onMounted, type Ref } from 'vue';
+import {useDataStore} from '@/stores/data';
 import io from 'socket.io-client';
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import { AgGridVue } from "ag-grid-vue3"; // AG Grid Component
-interface Service {
-  'Name': string;
-  'Thing ID': string;
-  'Entity ID': string;
-  'Space ID:': string;
-  'Vendor': string;
-  'AppCategory': string;
-  'Description': string;
-}
-const services: Ref<Service[]> = ref([])
+const store = useDataStore();
 const columns = ref([
   { field: 'Name', sortable: true, filter: true },
   { field: 'Thing ID', sortable: true, filter: true },
@@ -35,17 +27,18 @@ function setupSocket() {
     try {
       // Assuming the message is correctly formatted as a JSON string
       const data = JSON.parse(message);
-      console.log('Received message:', data);
-
       if (data['Tweet Type'] === "Service") {
-        console.log('Service Message', data);
-        services.value.push(data); // Assuming `services` is a reactive reference
+        // check if already exists
+        const el = store.services.find((el) => el['Name'] === data['Name']);
+        if (!el) {
+          store.services.push(data);
+        } else {
+          console.log('Service already exists!')
+        }
       }
     } catch (e) {
       console.error("Error parsing JSON!", e);
     }
-
-
   });
 
   socket.on('connect', () => {
@@ -68,7 +61,7 @@ onMounted(() => {
     <p class="text-xs mb-6">Refreshed 30s ago</p>
     <ag-grid-vue style="width: 100%; height: 500px;"
       class="ag-theme-quartz"
-      :rowData="[...services]"
+      :rowData="[...store.services]"
       :columnDefs="columns"></ag-grid-vue>
   </div>
 </template>
