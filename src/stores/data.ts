@@ -28,7 +28,8 @@ interface Thing {
 }
 interface App {
   name: string,
-  commands: string
+  commands: string,
+  startTime: string | null,
 }
 export const useDataStore = defineStore("data", () => {
   const services:Ref<Service[]> = ref([]);
