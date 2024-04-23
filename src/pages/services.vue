@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, type Ref } from 'vue';
-import {useDataStore} from '@/stores/data';
+import { useDataStore } from '@/stores/data';
 import io from 'socket.io-client';
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
@@ -16,49 +16,13 @@ const columns = ref([
   { field: 'Description', sortable: true, filter: true }
 ]);
 
-// Ref to store the list of messages
-const messages = ref([]);
-
-// Function to set up socket connection and event listeners
-function setupSocket() {
-  const socket = io('http://localhost:3000'); // Change the URL if your server is on a different host
-
-  socket.on('mcast_message', ({ message }) => {
-    try {
-      // Assuming the message is correctly formatted as a JSON string
-      const data = JSON.parse(message);
-      if (data['Tweet Type'] === "Service") {
-        // check if already exists
-        const el = store.services.find((el) => el['Name'] === data['Name']);
-        if (!el) {
-          store.services.push(data);
-        } else {
-          console.log('Service already exists!')
-        }
-      }
-    } catch (e) {
-      console.error("Error parsing JSON!", e);
-    }
-  });
-
-  socket.on('connect', () => {
-    console.log('Connected to Socket.IO server');
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Disconnected from Socket.IO server');
-  });
-}
-
-// Connect to the WebSocket server when component is mounted
-onMounted(() => {
-  setupSocket();
-});
 </script>
 <template>
   <div class="p-4">
     <h4>Services</h4>
-    <p class="text-xs mb-6">Refreshed 30s ago</p>
+    <p class="text-xs mb-6 flex items-center gap-2">
+    <div class="w-2 h-2 bg-green-400 rounded-full"></div>Live
+    </p>
     <ag-grid-vue style="width: 100%; height: 500px;"
       class="ag-theme-quartz"
       :rowData="[...store.services]"
