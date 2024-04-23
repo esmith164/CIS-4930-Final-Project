@@ -107,7 +107,7 @@ const handleExportApp = (app: App) => {
           <button class="bg-blue-600 text-white p-2 text-xs rounded-lg h-8 mt-2 w-full"
             @click="handleRunCode(app)">Run App</button>
           <button class="bg-yellow-600 text-white p-2 text-xs rounded-lg h-8 mt-2 w-full"
-            @click="handleStopApp()"
+            @click="handleStopApp(app)"
             v-if="app.startTime">Stop App</button>
           <button class="bg-red-600 text-white p-2 text-xs rounded-lg h-8 mt-2 w-full"
             @click="handleDeleteApp(app)">Delete App</button>
