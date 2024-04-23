@@ -17,7 +17,15 @@ const handleSaveApp = () => {
   appText.value = '';
   isCreateOpen.value = false;
 };
-const handleRunCode = (app) => {
+const loadText = (e : any) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    appText.value = e.target?.result as string;
+  };
+  reader.readAsText(file);
+};
+const handleRunCode = (app : any) => {
   console.log(app);
   const socket = io('http://localhost:3000');
   const commands = app.commands.split('\n');
@@ -40,7 +48,10 @@ const handleRunCode = (app) => {
       <div class="create-window text-xs mb-10"
         v-if="isCreateOpen">
         <div class="bg-white p-4 rounded-lg shadow-lg border">
-          <h4 class="font-semibold text-lg">App Editor</h4>
+          <div class="flex items-center w-full">
+            <h4 class="font-semibold text-lg">App Editor</h4>
+            <input type="file" class="ml-auto text-right" @change="loadText"/>
+          </div>
           <h4 class="font-semibold mb-1">Instructions</h4>
           <p class="text-slate-500 text-xs mb-1">To write an app you must use the GatorByte .IOT Format</p>
           <p class="text-slate-500 text-xs mb-4">Each command should be the format: <span class="text-blue-700">Thing ID,Service ID,Param1,Param2</span></p>
