@@ -3,6 +3,9 @@ import NavigationTabs from './components/navigation-tabs.vue';
 import { onMounted } from 'vue'
 import { useDataStore } from '@/stores/data';
 import io from 'socket.io-client';
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+const $toast = useToast();
 const store = useDataStore();
 function setupSocket() {
   const socket = io('http://localhost:3000');
@@ -40,6 +43,9 @@ function setupSocket() {
 
   socket.on('connect', () => {
     console.log('Connected to Socket.IO server');
+  });
+  socket.on('result', (msg) => {
+    $toast.success('Incoming sensor result: ', msg);
   });
 
   socket.on('disconnect', () => {
