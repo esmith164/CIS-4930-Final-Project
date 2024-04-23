@@ -8,6 +8,9 @@
 
     <router-link to="/relationships"
       class="border p-2 rounded-md">Relationships</router-link>
+    <router-link to="/apps"
+      class="border p-2 rounded-md">Apps</router-link>
+
   </div>
 </template>
 <style lang="css" scoped>

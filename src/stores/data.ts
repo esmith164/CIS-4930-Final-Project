@@ -25,15 +25,20 @@ interface Thing {
   Model: string,
   Description: string,
   OS: string
-
+}
+interface App {
+  name: string,
+  commands: string
 }
 export const useDataStore = defineStore("data", () => {
   const services:Ref<Service[]> = ref([]);
   const relationships:Ref<Relationship[]> =  ref([]);
   const things:Ref<Thing[]>= ref([]);
+  const apps:Ref<App[]> = ref([]);
   return {
     services,
     relationships,
-    things
+    things,
+    apps
   };
 });
